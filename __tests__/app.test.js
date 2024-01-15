@@ -24,10 +24,24 @@ describe('/api',()=>{
                         expect(topic).toHaveProperty('slug');
                         expect(topic).toHaveProperty('description')
                     })
+                    expect(topics).toHaveLength(3)
                 })
         })
+        
+    })
+    describe('/api endpoints',()=>{
+        test('Should respond with all the endpoints',()=>{
+            return request(app).get('/api').expect(200).then(({body})=>{
+                const {endpoints} = body;
+                expect(endpoints).toHaveProperty('GET /api')
+                expect(endpoints).toHaveProperty('GET /api/topics')
+            })
+        })
+    })
+    describe('for wrong endpoint',()=>{
         test('GET:404 /topic Should get Not Found error for wrong endpoint',()=>{
             return request(app).get('/api/topic').expect(404);
         })
     })
+    
 })
