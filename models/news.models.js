@@ -26,3 +26,25 @@ exports.fetchArticleByid=(id)=>{
     })
     
 }
+
+exports.fetchAllArticles=async()=>{
+    response=await db.query(`SELECT * FROM articles ORDER BY created_at desc`)
+        const articles=response.rows;
+        preparedarticles=articles.map(async(article)=>{
+            const newarticle={...article}
+            countResult=await db.query (`SELECT COUNT(body) FROM comments WHERE article_id=${newarticle.article_id}`)
+            newarticle.comment_count=countResult.rows[0].count
+            delete newarticle.body
+            return newarticle;
+        })
+        const formattedarticles=await Promise.all(preparedarticles)
+        return formattedarticles;
+    
+}
+
+// const newarticle={...article}
+//             return db.query (`SELECT COUNT(body) FROM comments WHERE article_id=${newarticle.article_id}`).then((result)=>{
+//             newarticle.comment_count=result.rows[0].count
+//             delete newarticle.body
+//             return newarticle;
+//             })
