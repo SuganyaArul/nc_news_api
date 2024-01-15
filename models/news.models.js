@@ -42,9 +42,3 @@ exports.fetchAllArticles=async()=>{
     
 }
 
-// const newarticle={...article}
-//             return db.query (`SELECT COUNT(body) FROM comments WHERE article_id=${newarticle.article_id}`).then((result)=>{
-//             newarticle.comment_count=result.rows[0].count
-//             delete newarticle.body
-//             return newarticle;
-//             })
