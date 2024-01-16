@@ -253,6 +253,21 @@ describe('/api',()=>{
             })
         })
     })
+    describe('DELETE /comments/:comment_id',()=>{
+        test('DELETE:204 /comments/2 Should respond with status and no body',()=>{
+                return request(app).delete('/api/comments/2').expect(204)
+        })
+        test('DELETE:400 /comments/invalid Should respond with Bad request error for invalid id',()=>{
+            return request(app).delete('/api/comments/invalid').expect(400).then(({body})=>{
+                expect(body.msg).toBe('Bad Request')
+            })
+        })
+        test('DELETE:404 /comments/200 Should respond with Not Found error for valid id but non exists',()=>{
+            return request(app).delete('/api/comments/200').expect(404).then(({body})=>{
+                expect(body.msg).toBe('Comments Not Found')
+            })
+        })
+    })
     describe('for wrong endpoint',()=>{
         test('GET:404 /topic Should get Not Found error for wrong endpoint',()=>{
             return request(app).get('/api/topic').expect(404);

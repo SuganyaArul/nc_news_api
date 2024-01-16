@@ -1,8 +1,8 @@
 const{fetchAllTopics,fetchAllEndpoints,fetchArticleByid,
     fetchAllArticles,fetchCommentsByArticleid,insertComments,
-    updateArticles} =require("../models/news.models")
+    updateArticles,removeComment} =require("../models/news.models")
 
-const {checkArticleidExists}=require('../db/checkId')
+const {checkArticleidExists,checkCommentIdExists}=require('../db/checkId')
 
 exports.getTopics=(req,res,next)=>{
     fetchAllTopics().then((topics)=>{
@@ -70,6 +70,17 @@ exports.patchArticles=(req,res,next)=>{
     const newVote=req.body.inc_votes;
     updateArticles(id,newVote).then((article)=>{
         res.status(200).send({article})
+    })
+    .catch((err)=>{
+        next(err)
+    })
+}
+
+exports.deleteComment=(req,res,next)=>{
+    const id=req.params.comment_id;
+    const idExistCheck=checkCommentIdExists(id);
+    Promise.all([removeComment(id),idExistCheck]).then(()=>{
+        res.status(204).send();
     })
     .catch((err)=>{
         next(err)
