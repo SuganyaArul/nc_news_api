@@ -43,8 +43,17 @@ exports.fetchAllArticles=async()=>{
 }
 
 exports.fetchCommentsByArticleid=(id)=>{
-    return db.query(`SELECT * FROM COMMENTS WHERE article_id=$1`,[id]).then(({rows})=>{
+    return db.query(`SELECT * FROM COMMENTS WHERE article_id=$1 ORDER BY created_at desc`,[id]).then(({rows})=>{
         return rows;
+    })
+}
+
+exports.insertComments=(id,commentData)=>{
+    return db.query(`INSERT INTO comments(body,author,article_id) VALUES($1,$2,$3) RETURNING *;`,[commentData.body,commentData.author,id]).then(({rows})=>{
+        return rows[0];
+    })
+    .catch((err)=>{
+        return Promise.reject(err)
     })
 }
 

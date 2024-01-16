@@ -144,6 +144,47 @@ describe('/api',()=>{
             })
         })
     })
+    describe('POST /articles/:article_id/comments',()=>{
+        test('POST:201 add comments for particular id',()=>{
+            const comment={
+                body: "Delicious pizza",
+                author: "rogersop",
+            }
+            return request(app).post('/api/articles/2/comments').send(comment).expect(201).then(({body})=>{
+                expect(body.comment).toMatchObject(comment)
+            })
+        })
+        test('POST:404 add comments with non exists author name should return Author Not Found error',()=>{
+            const comment={
+                body: "Delicious pizza",
+                author: "george",
+            }
+            return request(app).post('/api/articles/2/comments').send(comment).expect(404).then(({body})=>{
+                expect(body.msg).toBe('Author Not Found')
+            })
+        })
+        test('POST:400 add comments should return Bad request if required key missed',()=>{
+            const comment={
+                body: "Delicious pizza",
+               }
+            return request(app).post('/api/articles/2/comments').send(comment).expect(400).then(({body})=>{
+                expect(body.msg).toBe('Bad Request')
+            })
+        })
+        test('POST:400 add comments with not valid article_id should return Bad request ',()=>{
+            const comment={
+                body: "Delicious pizza",
+               }
+            return request(app).post('/api/articles/invalid/comments').send(comment).expect(400).then(({body})=>{
+                expect(body.msg).toBe('Bad Request')
+            })
+        })
+        test('POST:400 add comments should return Bad request if request body not send',()=>{
+            return request(app).post('/api/articles/2/comments').send().expect(400).then(({body})=>{
+                expect(body.msg).toBe('Bad Request')
+            })
+        })
+    })
     describe('for wrong endpoint',()=>{
         test('GET:404 /topic Should get Not Found error for wrong endpoint',()=>{
             return request(app).get('/api/topic').expect(404);
