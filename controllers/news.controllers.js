@@ -1,6 +1,6 @@
 const{fetchAllTopics,fetchAllEndpoints,fetchArticleByid,
     fetchAllArticles,fetchCommentsByArticleid,insertComments,
-    updateArticles,removeComment} =require("../models/news.models")
+    updateArticles,removeComment,fetchUsers} =require("../models/news.models")
 
 const {checkArticleidExists,checkCommentIdExists}=require('../db/checkId')
 
@@ -81,6 +81,15 @@ exports.deleteComment=(req,res,next)=>{
     const idExistCheck=checkCommentIdExists(id);
     Promise.all([removeComment(id),idExistCheck]).then(()=>{
         res.status(204).send();
+    })
+    .catch((err)=>{
+        next(err)
+    })
+}
+
+exports.getUsers=(req,res,next)=>{
+    fetchUsers().then((users)=>{
+        res.status(200).send({users})
     })
     .catch((err)=>{
         next(err)
