@@ -7,3 +7,11 @@ exports.checkArticleidExists=(id)=>{
         }
     })
 }
+
+exports.checkCommentIdExists=(id)=>{
+    return db.query(`SELECT * FROM comments WHERE comment_id=$1`,[id]).then(({rows})=>{
+        if(rows.length===0){
+            return Promise.reject({msg:'Comments Not Found'})
+        }
+    })
+}
