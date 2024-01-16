@@ -49,11 +49,8 @@ exports.fetchCommentsByArticleid=(id)=>{
 }
 
 exports.insertComments=(id,commentData)=>{
-    return db.query(`INSERT INTO comments(body,author,article_id) VALUES($1,$2,$3) RETURNING *;`,[commentData.body,commentData.author,id]).then(({rows})=>{
+    return db.query(`INSERT INTO comments(body,author,article_id) VALUES($1,$2,$3) RETURNING *;`,[commentData.body,commentData.username,id]).then(({rows})=>{
         return rows[0];
-    })
-    .catch((err)=>{
-        return Promise.reject(err)
     })
 }
 

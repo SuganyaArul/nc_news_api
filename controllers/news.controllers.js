@@ -42,9 +42,9 @@ exports.getArticles=(req,res,next)=>{
 
 exports.getCommentsByArticleid=(req,res,next)=>{
     const id=req.params.article_id;
-    const fetchcommentsQuery=fetchCommentsByArticleid(id);
+    const fetchCommentsQuery=fetchCommentsByArticleid(id);
     const existCheck=checkArticleidExists(id);
-    Promise.all([fetchcommentsQuery,existCheck]).then((response)=>{
+    Promise.all([fetchCommentsQuery,existCheck]).then((response)=>{
         const comments=response[0]
         res.status(200).send({comments})
     })
