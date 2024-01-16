@@ -163,7 +163,7 @@ describe('/api',()=>{
                 })
             })
         })
-        test('POST:404 add comments with non exists author name should return Author Not Found error',()=>{
+        test('POST:404 add comments with non exists author name should return Not Found error',()=>{
             const comment={
                 body: "Delicious pizza",
                 username: "george",
