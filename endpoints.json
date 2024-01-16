@@ -41,5 +41,34 @@
           "article_id":2
       }
     }
+  },
+  "GET /api/articles/:article_id/comments":{
+    "description": "serves with comment object for particular article id",
+    "queries": ["article_id"],
+    "exampleResponse": {
+      "comments":{
+        "comment_id": 1,
+        "body": "Superficially charming",
+        "votes": 0,
+        "author": "icellusedkars",
+        "article_id": 1,
+        "created_at": 1577848080000
+      }
+    }
+  },
+  "POST /api/articles/:article_id/comments":{
+    "description": "Serves with comment object which we inserted",
+    "queries": [{"body": "Delicious pizza",
+    "author": "rogersop"}],
+    "exampleResponse": {
+      "comments":{
+        "comment_id": 1,
+        "body": "Delicious pizza",
+        "votes": 0,
+        "author": "rogersop",
+        "article_id": 1,
+        "created_at": 1577848080000
+      }
+    }
   }
 }

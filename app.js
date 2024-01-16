@@ -1,7 +1,9 @@
 const express=require("express");
 const app=express();
 const{getTopics,getEndpoints,getArticleById,
-    getArticles,getCommentsByArticleid}=require("./controllers/news.controllers")
+    getArticles,getCommentsByArticleid,postComments}=require("./controllers/news.controllers")
+
+app.use(express.json());
 
 app.get('/api/topics',getTopics);
 
@@ -11,7 +13,9 @@ app.get('/api/articles/:article_id',getArticleById);
 
 app.get('/api/articles',getArticles);
 
-app.get('/api/articles/:article_id/comments',getCommentsByArticleid)
+app.get('/api/articles/:article_id/comments',getCommentsByArticleid);
+
+app.post('/api/articles/:article_id/comments',postComments)
 
 app.use((err,req,res,next)=>{
     if(err.msg==='No such files'||err.msg==='Not Found')
@@ -23,8 +27,10 @@ app.use((err,req,res,next)=>{
 })
 
 app.use((err,req,res,next)=>{
-    if(err.code==='22P02'){
+    if(err.code==='22P02' || err.code==='23502'){
         res.status(400).send({msg:'Bad Request'})
+    }else if(err.code==='23503'){
+        res.status(404).send({msg:'Author Not Found'})
     }
 })
 
