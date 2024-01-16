@@ -75,10 +75,11 @@ describe('/api',()=>{
         })
     })
     describe('/articles',()=>{
-        test('GET:200 Should respond with array of article objects',()=>{
+        test('GET:200 Should respond with array of article objects with correct datatypes',()=>{
             return request(app).get('/api/articles').expect(200).then(({body})=>{
                 const {articles}=body;
                 expect(body.articles).toHaveLength(13)
+                if(body.articles.length!==0){
                 articles.forEach((article)=>{
                     expect(article).toHaveProperty('author')
                     expect(article).toHaveProperty('title')
@@ -89,17 +90,6 @@ describe('/api',()=>{
                     expect(article).toHaveProperty('article_img_url')
                     expect(article).toHaveProperty('comment_count')
                     expect(article).not.toHaveProperty('body')
-                })
-            })
-        })
-        test('GET:200 Should respond with array of article objects sort by created_at and default descending order',()=>{
-            return request(app).get('/api/articles').expect(200).then(({body})=>{
-                expect(body.articles).toBeSortedBy('created_at',{descending:true})
-            })
-        })
-        test('GET:200 Should respond with array of article objects with correct datatypes',()=>{
-            return request(app).get('/api/articles').expect(200).then(({body})=>{
-                body.articles.forEach((article)=>{
                     expect(typeof article.author).toBe('string')
                     expect(typeof article.title).toBe('string')
                     expect(typeof article.article_id).toBe('number')
@@ -110,6 +100,12 @@ describe('/api',()=>{
                     expect(typeof article.comment_count).toBe('string')
                     
                 })
+            }
+            })
+        })
+        test('GET:200 Should respond with array of article objects sort by created_at and default descending order',()=>{
+            return request(app).get('/api/articles').expect(200).then(({body})=>{
+                expect(body.articles).toBeSortedBy('created_at',{descending:true})
             })
         })
     })
@@ -124,8 +120,16 @@ describe('/api',()=>{
                     expect(comment).toHaveProperty('author');
                     expect(comment).toHaveProperty('body');
                     expect(comment).toHaveProperty('article_id');
+                    
                 })
-                expect(body.comments).toHaveLength(2)
+                expect(body.comments).toHaveLength(2);
+                expect(body.comments[0]).toMatchObject({
+                    body: "Ambidextrous marsupial",
+                    votes: 0,
+                    author: "icellusedkars",
+                    article_id: 3,
+                    created_at: '2020-09-19T23:10:00.000Z',
+                  })
             })
         })
         test('GET:400 Should return Bad Request for non valid article_id',()=>{
@@ -148,19 +152,33 @@ describe('/api',()=>{
         test('POST:201 add comments for particular id',()=>{
             const comment={
                 body: "Delicious pizza",
-                author: "rogersop",
+                username: "rogersop",
             }
             return request(app).post('/api/articles/2/comments').send(comment).expect(201).then(({body})=>{
-                expect(body.comment).toMatchObject(comment)
+                expect(body.comment).toMatchObject({
+                    body: "Delicious pizza",
+                    author: "rogersop",
+                    article_id:2,
+                    votes:0
+                })
             })
         })
         test('POST:404 add comments with non exists author name should return Author Not Found error',()=>{
             const comment={
                 body: "Delicious pizza",
-                author: "george",
+                username: "george",
             }
             return request(app).post('/api/articles/2/comments').send(comment).expect(404).then(({body})=>{
-                expect(body.msg).toBe('Author Not Found')
+                expect(body.msg).toBe('Not Found')
+            })
+        })
+        test('POST:404 add comments with non exists article id should return Not Found error',()=>{
+            const comment={
+                body: "Delicious pizza",
+                username: "george",
+            }
+            return request(app).post('/api/articles/20/comments').send(comment).expect(404).then(({body})=>{
+                expect(body.msg).toBe('Not Found')
             })
         })
         test('POST:400 add comments should return Bad request if required key missed',()=>{
