@@ -28,17 +28,23 @@ exports.fetchArticleByid=(id)=>{
 }
 
 exports.fetchAllArticles=async()=>{
-    response=await db.query(`SELECT * FROM articles ORDER BY created_at desc`)
+    const response=await db.query(`SELECT * FROM articles ORDER BY created_at desc`)
         const articles=response.rows;
-        preparedarticles=articles.map(async(article)=>{
-            const newarticle={...article}
-            countResult=await db.query (`SELECT COUNT(body) FROM comments WHERE article_id=${newarticle.article_id}`)
-            newarticle.comment_count=countResult.rows[0].count
-            delete newarticle.body
-            return newarticle;
+        const preparedArticles=articles.map(async(article)=>{
+            const newArticle={...article}
+            const countResult=await db.query (`SELECT COUNT(body) FROM comments WHERE article_id=${newArticle.article_id}`)
+            newArticle.comment_count=countResult.rows[0].count
+            delete newArticle.body
+            return newArticle;
         })
-        const formattedarticles=await Promise.all(preparedarticles)
-        return formattedarticles;
+        const formattedArticles=await Promise.all(preparedArticles)
+        return formattedArticles;
     
+}
+
+exports.fetchCommentsByArticleid=(id)=>{
+    return db.query(`SELECT * FROM COMMENTS WHERE article_id=$1`,[id]).then(({rows})=>{
+        return rows;
+    })
 }
 
