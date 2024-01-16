@@ -1,5 +1,6 @@
 const{fetchAllTopics,fetchAllEndpoints,fetchArticleByid,
-    fetchAllArticles,fetchCommentsByArticleid,insertComments} =require("../models/news.models")
+    fetchAllArticles,fetchCommentsByArticleid,insertComments,
+    updateArticles} =require("../models/news.models")
 
 const {checkArticleidExists}=require('../db/checkId')
 
@@ -58,6 +59,17 @@ exports.postComments=(req,res,next)=>{
     const commentData=req.body;
     insertComments(id,commentData).then((comment)=>{
         res.status(201).send({comment})
+    })
+    .catch((err)=>{
+        next(err)
+    })
+}
+
+exports.patchArticles=(req,res,next)=>{
+    const id=req.params.article_id;
+    const newVote=req.body.inc_votes;
+    updateArticles(id,newVote).then((article)=>{
+        res.status(200).send({article})
     })
     .catch((err)=>{
         next(err)

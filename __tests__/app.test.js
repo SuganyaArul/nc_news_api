@@ -203,6 +203,56 @@ describe('/api',()=>{
             })
         })
     })
+    describe('PATCH /articles/:article_id',()=>{
+        test('PATCH:200 should increment the vote by given votes ',()=>{
+            const newVote={inc_votes:3}
+            return request(app).patch('/api/articles/1').send(newVote).expect(200).then(({body})=>{
+                expect(body.article).toMatchObject({
+                    title: "Living in the shadow of a great man",
+                    topic: "mitch",
+                    author: "butter_bridge",
+                    body: "I find this existence challenging",
+                    created_at: "2020-07-09T20:11:00.000Z",
+                    votes: 103,
+                    article_img_url:
+                    "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+                })
+            })
+        })
+        test('PATCH:200 should decrement the vote by given votes ',()=>{
+            const newVote={inc_votes:-4}
+            return request(app).patch('/api/articles/1').send(newVote).expect(200).then(({body})=>{
+                expect(body.article).toMatchObject({
+                    title: "Living in the shadow of a great man",
+                    topic: "mitch",
+                    author: "butter_bridge",
+                    body: "I find this existence challenging",
+                    created_at: "2020-07-09T20:11:00.000Z",
+                    votes: 96,
+                    article_img_url:
+                    "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+                })
+            })
+        })
+        test('PATCH:400 should respond with bad request error for newVote not send ',()=>{
+            const newVote={inc_votes:-4}
+            return request(app).patch('/api/articles/1').expect(400).then(({body})=>{
+                expect(body.msg).toBe('Bad Request')
+            })
+        })
+        test('PATCH:400 should respond with bad request error for invalid id ',()=>{
+            const newVote={inc_votes:-4}
+            return request(app).patch('/api/articles/invalid').send(newVote).expect(400).then(({body})=>{
+                expect(body.msg).toBe('Bad Request')
+            })
+        })
+        test('PATCH:404 should respond with bad request error for valid id but not exist ',()=>{
+            const newVote={inc_votes:-4}
+            return request(app).patch('/api/articles/100').send(newVote).expect(404).then(({body})=>{
+                expect(body.msg).toBe('Not Found')
+            })
+        })
+    })
     describe('for wrong endpoint',()=>{
         test('GET:404 /topic Should get Not Found error for wrong endpoint',()=>{
             return request(app).get('/api/topic').expect(404);
