@@ -1,4 +1,4 @@
-const{fetchAllTopics,fetchAllEndpoints,fetchArticleByid} =require("../models/news.models")
+const{fetchAllTopics,fetchAllEndpoints,fetchArticleByid,fetchAllArticles} =require("../models/news.models")
 
 exports.getTopics=(req,res,next)=>{
     fetchAllTopics().then((topics)=>{
@@ -22,6 +22,15 @@ exports.getArticleById=(req,res,next)=>{
     const id=req.params.article_id;
     fetchArticleByid(id).then((article)=>{
         return res.status(200).send({article})
+    })
+    .catch((err)=>{
+        next(err)
+    })
+}
+
+exports.getArticles=(req,res,next)=>{
+    fetchAllArticles().then((articles)=>{
+        return res.status(200).send({articles})
     })
     .catch((err)=>{
         next(err)
