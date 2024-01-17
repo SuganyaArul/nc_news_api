@@ -33,7 +33,8 @@ exports.getArticleById=(req,res,next)=>{
 }
 
 exports.getArticles=(req,res,next)=>{
-    fetchAllArticles().then((articles)=>{
+    const {topic} =req.query;
+    fetchAllArticles(topic).then((articles)=>{
         return res.status(200).send({articles})
     })
     .catch((err)=>{
