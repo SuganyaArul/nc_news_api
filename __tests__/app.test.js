@@ -108,6 +108,24 @@ describe('/api',()=>{
                 expect(body.articles).toBeSortedBy('created_at',{descending:true})
             })
         })
+        test('GET:200 Should respond with article object for the given topic',()=>{
+            return request(app).get('/api/articles?topic=mitch').expect(200).then(({body})=>{
+                expect(body.articles).toHaveLength(12)
+                if(body.articles !== 0){
+                    body.articles.forEach((article)=>{
+                        expect(article).toHaveProperty('comment_count')
+                        expect(article).not.toHaveProperty('body')
+                        expect(article).toHaveProperty('topic')
+                        expect(article.topic).toBe('mitch')
+                    })
+                }
+            })
+        })
+        test('GET:404 Should respond with NOT Found for non exist query',()=>{
+            return request(app).get('/api/articles?topic=lee').expect(404).then(({body})=>{
+                expect(body.msg).toBe('Not Found')
+            })
+        })
     })
     describe('/articles/:article_id/comments endpoints',()=>{
         test('GET:200 Should return array of comments for the given article_id',()=>{

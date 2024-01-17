@@ -27,18 +27,21 @@ exports.fetchArticleByid=(id)=>{
     
 }
 
-exports.fetchAllArticles=async()=>{
-    const response=await db.query(`SELECT * FROM articles ORDER BY created_at desc`)
-        const articles=response.rows;
-        const preparedArticles=articles.map(async(article)=>{
-            const newArticle={...article}
-            const countResult=await db.query (`SELECT COUNT(body) FROM comments WHERE article_id=${newArticle.article_id}`)
-            newArticle.comment_count=countResult.rows[0].count
-            delete newArticle.body
-            return newArticle;
-        })
-        const formattedArticles=await Promise.all(preparedArticles)
-        return formattedArticles;
+exports.fetchAllArticles=async(topic)=>{
+    let sqlQuery=`SELECT articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, articles.article_id , COUNT(comments.article_id) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id=comments.article_id`
+
+    const parameter=[];
+    if(topic){
+        sqlQuery+=` WHERE articles.topic=$1`
+        parameter.push(topic)
+    }
+    
+    sqlQuery+=` GROUP BY articles.article_id ORDER BY created_at desc;`
+    const response=await db.query(sqlQuery,parameter)
+    if(response.rows.length===0){
+        return Promise.reject({msg:'Not Found'})
+    }
+         return response.rows;
     
 }
 
