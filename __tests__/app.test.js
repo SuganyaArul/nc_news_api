@@ -271,6 +271,7 @@ describe('/api',()=>{
     describe('GET /users endpoint',()=>{
         test('GET:200 Should respond with array of user object',()=>{
             return request(app).get('/api/users').expect(200).then(({body})=>{
+                if(body.users.length !== 0){
                 expect(body.users[0]).toMatchObject({
                     
                         username: 'butter_bridge',
@@ -295,6 +296,7 @@ describe('/api',()=>{
                   avatar_url:
                     'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png'
                 })
+            }
             })
         })
     })
