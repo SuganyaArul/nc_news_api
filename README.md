@@ -4,7 +4,7 @@ I completed this project as part of Northcoders Software Developement Bootcamp. 
 
 This project is developed and tested using TDD(TestDrivenDevelopment) process using jest, supertest and reviewed by Northcoders Senior Developer.
 
-# SETUP 
+# INSTRUCTIONS TO SETUP 
 
 The code for this project will available in [this GitHub Repo](https://github.com/SuganyaArul/nc_news_api) 
 
