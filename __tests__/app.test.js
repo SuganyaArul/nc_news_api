@@ -73,6 +73,12 @@ describe('/api',()=>{
                 expect(body.msg).toBe('Bad Request')
             })
         })
+        test('GET:200 /articles/1 Should respond with the comment_count property',()=>{
+            return request(app).get('/api/articles/1').expect(200).then(({body})=>{
+                expect(body.article).toHaveProperty('comment_count');
+                expect(body.article.comment_count).toBe('11')
+            })
+        })
     })
     describe('/articles',()=>{
         test('GET:200 Should respond with array of article objects with correct datatypes',()=>{
