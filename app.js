@@ -2,7 +2,7 @@ const express=require("express");
 const app=express();
 const{getTopics,getEndpoints,getArticleById,
     getArticles,getCommentsByArticleid,postComments,
-    patchArticles,deleteComment,getUsers}=require("./controllers/news.controllers")
+    patchArticles,deleteComment,getUsers,getUserByUsername}=require("./controllers/news.controllers")
 
 app.use(express.json());
 
@@ -23,6 +23,8 @@ app.patch('/api/articles/:article_id',patchArticles);
 app.delete('/api/comments/:comment_id',deleteComment);
 
 app.get('/api/users',getUsers);
+
+app.get('/api/users/:username',getUserByUsername);
 
 app.use((err,req,res,next)=>{
     if(err.msg==='No such files'||err.msg==='Not Found')

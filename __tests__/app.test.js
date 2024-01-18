@@ -334,5 +334,18 @@ describe('/api',()=>{
             return request(app).get('/api/topic').expect(404);
         })
     })
-    
+    describe('GET /users/:username',()=>{
+        test('GET:200 /users/icellusedkars Should repond with particular user object',()=>{
+            return request(app).get('/api/users/icellusedkars').expect(200).then(({body})=>{
+                expect(body.user).toHaveProperty('username',expect.any(String));
+                expect(body.user).toHaveProperty('name',expect.any(String));
+                expect(body.user).toHaveProperty('avatar_url',expect.any(String));
+            })
+        })
+        test('GET:404 /users/sam Should repond with error message',()=>{
+            return request(app).get('/api/users/sam').expect(404).then(({body})=>{
+                expect(body.msg).toBe('Not Found')
+            })
+        })
+    })
 })

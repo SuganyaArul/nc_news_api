@@ -78,3 +78,12 @@ exports.fetchUsers=()=>{
     })
 }
 
+exports.fetchUserByUsername=(username)=>{
+    return db.query(`SELECT * FROM users WHERE username=$1`,[username]).then(({rows})=>{
+        if(rows.length === 0){
+            return Promise.reject({msg:'Not Found'}) 
+        }
+        return rows[0]
+    })
+}
+
