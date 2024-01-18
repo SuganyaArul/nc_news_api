@@ -1,6 +1,7 @@
 const{fetchAllTopics,fetchAllEndpoints,fetchArticleByid,
     fetchAllArticles,fetchCommentsByArticleid,insertComments,
-    updateArticles,removeComment,fetchUsers,fetchUserByUsername} =require("../models/news.models")
+    updateArticles,removeComment,fetchUsers,fetchUserByUsername,
+    updateComments} =require("../models/news.models")
 
 const {checkArticleidExists,checkCommentIdExists}=require('../db/checkId')
 
@@ -101,6 +102,17 @@ exports.getUserByUsername=(req,res,next)=>{
     const username=req.params.username;
     fetchUserByUsername(username).then((user)=>{
         res.status(200).send({user})
+    })
+    .catch((err)=>{
+        next(err)
+    })
+}
+
+exports.patchComments=(req,res,next)=>{
+    const id=req.params.comment_id;
+    const newVote=req.body.inc_votes;
+    updateComments(id,newVote).then((comment)=>{
+        res.status(200).send({comment})
     })
     .catch((err)=>{
         next(err)

@@ -87,3 +87,12 @@ exports.fetchUserByUsername=(username)=>{
     })
 }
 
+exports.updateComments=(id,newVote)=>{
+    return db.query(`UPDATE comments SET votes=votes+$1 WHERE comment_id=$2 RETURNING *`,[newVote,id]).then(({rows})=>{
+        if(rows.length===0){
+            return Promise.reject({msg:'Not Found'})
+        }
+        return rows[0];  
+    })
+}
+
