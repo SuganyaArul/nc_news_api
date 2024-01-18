@@ -114,6 +114,11 @@ describe('/api',()=>{
                 expect(body.articles).toBeSortedBy('created_at',{descending:true})
             })
         })
+        test('GET:200 Should respond with array of article objects sort by title in ascending order',()=>{
+            return request(app).get('/api/articles?sort_by=title&order=asc').expect(200).then(({body})=>{
+                expect(body.articles).toBeSortedBy('title',{ascending:true})
+            })
+        })
         test('GET:200 Should respond with article object for the given topic',()=>{
             return request(app).get('/api/articles?topic=mitch').expect(200).then(({body})=>{
                 expect(body.articles).toHaveLength(12)

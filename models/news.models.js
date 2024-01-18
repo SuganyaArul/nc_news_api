@@ -27,7 +27,7 @@ exports.fetchArticleByid=(id)=>{
     
 }
 
-exports.fetchAllArticles=async(topic)=>{
+exports.fetchAllArticles=async(topic, sort_by='created_at', order='desc')=>{
     let sqlQuery=`SELECT articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, articles.article_id , COUNT(comments.article_id) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id=comments.article_id`
 
     const parameter=[];
@@ -36,7 +36,7 @@ exports.fetchAllArticles=async(topic)=>{
         parameter.push(topic)
     }
     
-    sqlQuery+=` GROUP BY articles.article_id ORDER BY created_at desc;`
+    sqlQuery+=` GROUP BY articles.article_id ORDER BY ${sort_by} ${order};`
     const response=await db.query(sqlQuery,parameter)
     if(response.rows.length===0){
         return Promise.reject({msg:'Not Found'})
