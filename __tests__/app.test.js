@@ -377,4 +377,73 @@ describe('/api',()=>{
             })
         })
     })
+    describe('POST /articles',()=>{
+        test('POST:201 Should respond with newly inserted article object',()=>{
+            const newArticle={
+                author:'rogersop',
+                topic:'cats',
+                title:'Cat lovers',
+                body:'Cat love to snuggle',
+            }
+            return request(app).post('/api/articles').send(newArticle).expect(201).then(({body})=>{
+                expect(body.article).toHaveProperty('author',expect.any(String))
+                expect(body.article).toHaveProperty('title',expect.any(String))
+                expect(body.article).toHaveProperty('body',expect.any(String))
+                expect(body.article).toHaveProperty('topic',expect.any(String))
+                expect(body.article).toHaveProperty('article_id',expect.any(Number))
+                expect(body.article).toHaveProperty('created_at',expect.any(String))
+                expect(body.article).toHaveProperty('comment_count',expect.any(Number))
+                expect(body.article).toHaveProperty('votes',expect.any(Number))
+                expect(body.article.comment_count).toBe(0)
+                expect(body.article.votes).toBe(0)
+            })
+        })
+        test('POST:404 Should respond with error if non exists author name sent',()=>{
+            const newArticle={
+                author:'invalid',
+                topic:'cats',
+                title:'Cat lovers',
+                body:'Cat love to snuggle',
+            }
+            return request(app).post('/api/articles').send(newArticle).expect(404).then(({body})=>{
+                expect(body.msg).toBe('Not Found')
+            })
+        })
+        test('POST:404 Should respond with error if non exists topic sent',()=>{
+            const newArticle={
+                author:'rogersop',
+                topic:'dog',
+                title:'dog lovers',
+                body:'dog love to snuggle',
+            }
+            return request(app).post('/api/articles').send(newArticle).expect(404).then(({body})=>{
+                expect(body.msg).toBe('Not Found')
+            })
+        })
+        test('POST:400 Should respond with Bad Request if article not sent',()=>{
+            return request(app).post('/api/articles').send().expect(400).then(({body})=>{
+                expect(body.msg).toBe('Bad Request')
+            })
+        })
+        test('POST:400 Should respond with Bad Request if article required author field not sent',()=>{
+            const newArticle={
+                topic:'dog',
+                title:'dog lovers',
+                body:'dog love to snuggle',
+            }
+            return request(app).post('/api/articles').send().expect(400).then(({body})=>{
+                expect(body.msg).toBe('Bad Request')
+            })
+        })
+        test('POST:400 Should respond with Bad Request if topic required author field not sent',()=>{
+            const newArticle={
+                author:'rogersop',
+                title:'dog lovers',
+                body:'dog love to snuggle',
+            }
+            return request(app).post('/api/articles').send().expect(400).then(({body})=>{
+                expect(body.msg).toBe('Bad Request')
+            })
+        })
+    })
 })

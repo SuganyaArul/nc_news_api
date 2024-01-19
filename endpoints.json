@@ -58,6 +58,7 @@
   },
   "POST /api/articles/:article_id/comments":{
     "description": "Serves with comment object which we inserted",
+    "queries":["article_id"],
     "body": [{"body": "Delicious pizza",
     "author": "rogersop"}],
     "exampleResponse": {
@@ -73,6 +74,7 @@
   },
   "PATCH /api/articles/:article_id":{
     "description": "Serves with updated article",
+    "queries":["article_id"],
     "body": [{ "inc_votes": 3 }],
     "exampleResponse": {
       "article":{
@@ -115,5 +117,42 @@
           "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
       }]
     }
-  }
+  },
+  "PATCH /api/comments/:comment_id":{
+    "description": "Serves with updated comments",
+    "queries":["comment_id"],
+    "body": [{ "inc_votes": 5 }],
+    "exampleResponse": {
+      "comment":{
+        "comment_id": 3,
+        "body": "Delicious pizza",
+        "votes": 5,
+        "author": "rogersop",
+        "article_id": 1,
+        "created_at": 1577848080000
+      }
+    }
+  },
+  "POST /api/articles":{
+    "description": "Serves with article object which we inserted",
+    "queries":[],
+    "body": [{
+      "author":"rogersop",
+      "topic":"cats",
+      "title":"Cat lovers",
+      "body":"Cat love to snuggle"
+  }],
+    "exampleResponse": {
+      "article":{
+        "title": "Cat lovers",
+          "topic": "cats",
+          "author": "rogersop",
+          "body": "Text from the article..",
+          "created_at": "2018-05-30T15:59:13.341Z",
+          "votes": 3,
+          "comment_count": 0,
+          "article_id":12
+      }
+    }
+  } 
 }

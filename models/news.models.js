@@ -96,3 +96,9 @@ exports.updateComments=(id,newVote)=>{
     })
 }
 
+exports.insertArticle=(newArticle)=>{
+    return db.query(`INSERT INTO articles(title,body,topic,author) VALUES($1,$2,$3,$4) RETURNING *;`,[newArticle.title,newArticle.body,newArticle.topic,newArticle.author]).then(({rows})=>{
+        return rows[0]
+    })
+}
+

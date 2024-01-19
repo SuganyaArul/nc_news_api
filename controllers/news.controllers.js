@@ -1,5 +1,5 @@
 const{fetchAllTopics,fetchAllEndpoints,fetchArticleByid,
-    fetchAllArticles,fetchCommentsByArticleid,insertComments,
+    fetchAllArticles,fetchCommentsByArticleid,insertComments,insertArticle,
     updateArticles,removeComment,fetchUsers,fetchUserByUsername,
     updateComments} =require("../models/news.models")
 
@@ -113,6 +113,18 @@ exports.patchComments=(req,res,next)=>{
     const newVote=req.body.inc_votes;
     updateComments(id,newVote).then((comment)=>{
         res.status(200).send({comment})
+    })
+    .catch((err)=>{
+        next(err)
+    })
+}
+
+exports.postArticles=(req,res,next)=>{
+    const newArticle=req.body;
+    insertArticle(newArticle).then((preparedArticle)=>{
+        const article={...preparedArticle}
+        article.comment_count=0;
+        res.status(201).send({article})
     })
     .catch((err)=>{
         next(err)
