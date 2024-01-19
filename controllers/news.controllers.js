@@ -1,6 +1,6 @@
 const{fetchAllTopics,fetchAllEndpoints,fetchArticleByid,
     fetchAllArticles,fetchCommentsByArticleid,insertComments,insertArticle,
-    updateArticles,removeComment,fetchUsers,fetchUserByUsername,
+    insertTopic,updateArticles,removeComment,fetchUsers,fetchUserByUsername,
     updateComments} =require("../models/news.models")
 
 const {checkArticleidExists,checkCommentIdExists}=require('../db/checkId')
@@ -125,6 +125,16 @@ exports.postArticles=(req,res,next)=>{
         const article={...preparedArticle}
         article.comment_count=0;
         res.status(201).send({article})
+    })
+    .catch((err)=>{
+        next(err)
+    })
+}
+
+exports.postTopics=(req,res,next)=>{
+    const topic=req.body;
+    insertTopic(topic).then((topic)=>{
+        res.status(201).send({topic})
     })
     .catch((err)=>{
         next(err)

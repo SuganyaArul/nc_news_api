@@ -446,4 +446,40 @@ describe('/api',()=>{
             })
         })
     })
+    describe('POST /topics',()=>{
+        test('POST: 201 Should respond with Posted topic object',()=>{
+            const topic={
+                slug:'Dhoni',
+                description:'Great Cricketer'
+            }
+            return request(app).post('/api/topics').send(topic).expect(201).then(({body})=>{
+                expect(body.topic).toMatchObject(topic)
+            })
+        })
+        test('POST: 400 Should respond with Bad Request if topic not sent',()=>{
+            const topic={
+                slug:'Dhoni',
+                description:'Great Cricketer'
+            }
+            return request(app).post('/api/topics').expect(400).then(({body})=>{
+                expect(body.msg).toBe('Bad Request')
+            })
+        })
+        test('POST: 400 Should respond with Bad Request if required field slug not sent',()=>{
+            const topic={
+                description:'Great Cricketer'
+            }
+            return request(app).post('/api/topics').expect(400).then(({body})=>{
+                expect(body.msg).toBe('Bad Request')
+            })
+        })
+        test('POST: 400 Should respond with Bad Request if required field description not sent',()=>{
+            const topic={
+                slug:'Dhoni',
+            }
+            return request(app).post('/api/topics').expect(400).then(({body})=>{
+                expect(body.msg).toBe('Bad Request')
+            })
+        })
+    })
 })
