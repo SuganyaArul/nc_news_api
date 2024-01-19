@@ -348,4 +348,33 @@ describe('/api',()=>{
             })
         })
     })
+    describe('PATCH /comments/:comment_id',()=>{
+        test('PATCH:200 Should increment the vote by given newVote',()=>{
+            const newVote={inc_votes : 3}
+            return request(app).patch('/api/comments/2').send(newVote).expect(200).then(({body})=>{
+                expect(body.comment).toHaveProperty('body',expect.any(String))
+                expect(body.comment).toHaveProperty('votes',expect.any(Number))
+                expect(body.comment).toHaveProperty('author',expect.any(String))
+                expect(body.comment.votes).toBe(17)
+            })
+        })
+        test('PATCH:400 Should respond with Bad request for invalid id',()=>{
+            const newVote={inc_votes : 3}
+            return request(app).patch('/api/comments/invalid').send(newVote).expect(400).then(({body})=>{
+                expect(body.msg).toBe('Bad Request')
+            })
+        })
+        test('PATCH:400 Should respond with Bad request for newVote not send',()=>{
+            const newVote={inc_votes : 3}
+            return request(app).patch('/api/comments/3').send().expect(400).then(({body})=>{
+                expect(body.msg).toBe('Bad Request')
+            })
+        })
+        test('PATCH:404 Should respond with Not Found for valid id but not exists',()=>{
+            const newVote={inc_votes : 3}
+            return request(app).patch('/api/comments/390').send(newVote).expect(404).then(({body})=>{
+                expect(body.msg).toBe('Not Found')
+            })
+        })
+    })
 })
