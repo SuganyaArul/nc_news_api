@@ -154,5 +154,19 @@
           "article_id":12
       }
     }
+  },
+  "POST /api/topic":{
+    "description": "Serves with topic object which we inserted",
+    "queries":[],
+    "body": [{
+      "slug":"Dhoni",
+      "description":"Great Cricket Player"      
+  }],
+    "exampleResponse": {
+      "topic":{
+        "slug":"Dhoni",
+        "description":"Great Cricket Player"
+      }
+    }
   } 
 }
