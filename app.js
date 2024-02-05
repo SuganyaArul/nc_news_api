@@ -1,10 +1,11 @@
 const express=require("express");
 const app=express();
+const cors=require('cors');
 const{getTopics,getEndpoints,getArticleById,
     getArticles,getCommentsByArticleid,postComments,postArticles,
     postTopics,patchArticles,deleteComment,getUsers,getUserByUsername,
     patchComments}=require("./controllers/news.controllers")
-
+app.use(cors());
 app.use(express.json());
 
 app.get('/api/topics',getTopics);
